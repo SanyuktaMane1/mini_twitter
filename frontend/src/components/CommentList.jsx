@@ -22,6 +22,7 @@ const CommentList = ({ postId, currentUser }) => {
     loadComments();
   }, [postId]);
 
+  // Load all comments for this post
   const loadComments = async () => {
     try {
       const data = await fetchComments(postId);
@@ -35,28 +36,19 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
+  // Add new comment handler
   const handleAddComment = async (e) => {
     e.preventDefault();
     const trimmed = newCommentText.trim();
 
-    if (!trimmed) {
-      setError("Comment text cannot be empty.");
-      return;
-    }
-    if (trimmed.length < 2) {
-      setError("Comment must be at least 2 characters.");
-      return;
-    }
-    if (trimmed.length > 280) {
-      setError("Comment must be 280 characters or less.");
-      return;
-    }
+    if (!trimmed) return setError("Comment is required.");
+    if (trimmed.length < 2)
+      return setError("Comment must be at least 2 characters.");
+    if (trimmed.length > 280)
+      return setError("Comment must be 280 characters or less.");
 
     const userId = currentUser?.users_id || currentUser?.id;
-    if (!userId) {
-      setError("User ID not found.");
-      return;
-    }
+    if (!userId) return setError("User ID not found.");
 
     const payload = {
       posts_id: postId,
@@ -66,8 +58,8 @@ const CommentList = ({ postId, currentUser }) => {
 
     try {
       await createComment(payload);
-      await loadComments();
       setNewCommentText("");
+      await loadComments();
       setError("");
     } catch (err) {
       console.error("Error adding comment:", err);
@@ -77,17 +69,9 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
-  const handleEditComment = (comment) => {
-    setEditingCommentId(comment.comment_id);
-    setEditText(comment.comment_text);
-    setDropdownOpenId(null);
-    setError("");
-  };
-
+  // Save edited comment handler
   const handleSaveEdit = async (commentId) => {
-    if (!editText.trim()) {
-      return setError("Comment text cannot be empty.");
-    }
+    if (!editText.trim()) return setError("Comment text cannot be empty.");
 
     try {
       await updateComment(commentId, { comment_text: editText.trim() });
@@ -107,6 +91,7 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
+  // Delete comment handler (soft-delete)
   const handleDeleteComment = async (commentId) => {
     try {
       await deleteComment(commentId);
@@ -119,6 +104,15 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
+  // Open edit textarea with comment content
+  const handleEditComment = (comment) => {
+    setEditingCommentId(comment.comment_id);
+    setEditText(comment.comment_text);
+    setDropdownOpenId(null);
+    setError("");
+  };
+
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -134,6 +128,10 @@ const CommentList = ({ postId, currentUser }) => {
       <h4 className="font-semibold mb-2">Comments</h4>
 
       {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
+
+      {comments.length === 0 && (
+        <p className="text-gray-500 mb-2">No comments yet.</p>
+      )}
 
       {comments.map((comment) =>
         editingCommentId === comment.comment_id ? (
@@ -161,7 +159,8 @@ const CommentList = ({ postId, currentUser }) => {
           <div key={comment.comment_id} className="mb-2 border-b pb-2 relative">
             <p>{comment.comment_text}</p>
             <p className="text-sm text-gray-500">
-              Posted by {comment.usersname || `User #${comment.users_id}`} •{" "}
+              Posted by {comment.User?.usersname || `User #${comment.users_id}`}
+              •{" "}
               {new Date(comment.created_at).toLocaleString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -223,6 +222,7 @@ const CommentList = ({ postId, currentUser }) => {
           placeholder="Add a comment..."
           rows={2}
           className="w-full p-2 border rounded"
+          required
         />
         <button
           type="submit"

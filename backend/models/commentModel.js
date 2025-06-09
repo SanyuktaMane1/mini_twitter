@@ -36,11 +36,11 @@ const Comment = sequelize.define(
   },
   {
     tableName: "comments",
-    timestamps: false, // You are managing timestamps manually
+    timestamps: false,
     underscored: true,
     defaultScope: {
       where: {
-        disabled: 0, // Only fetch comments that aren't disabled
+        disabled: 0,
       },
     },
   }

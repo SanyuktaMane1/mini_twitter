@@ -17,6 +17,7 @@ exports.createComment = async (req, res) => {
   }
 };
 
+
 exports.getCommentsByPost = async (req, res) => {
   try {
     const { postId } = req.params;
@@ -31,11 +32,14 @@ exports.getCommentsByPost = async (req, res) => {
       ],
       order: [["created_at", "ASC"]],
     });
+
+    res.json(comments);
   } catch (err) {
     console.error("Failed to fetch comments:", err);
     res.status(500).json({ error: "Failed to fetch comments" });
   }
 };
+
 
 exports.updateComment = async (req, res) => {
   try {

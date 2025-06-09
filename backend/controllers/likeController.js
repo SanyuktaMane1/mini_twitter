@@ -24,25 +24,6 @@ exports.addLike = async (req, res) => {
   }
 };
 
-// exports.removeLike = async (req, res) => {
-//   const { users_id, posts_id } = req.params;
-
-//   try {
-//     const like = await Like.findOne({ where: { users_id, posts_id } });
-
-//     if (!like) {
-//       return res.status(404).json({ error: "Like not found." });
-//     }
-
-//     await like.destroy();
-//     res.json({ message: "Post unliked." });
-//   } catch (error) {
-//     console.error("Error unliking post:", error);
-//     res.status(500).json({ error: "Failed to unlike post." });
-//   }
-// };
-
-// Controller
 exports.removeLike = async (req, res) => {
   const { users_id, posts_id } = req.body;
 
