@@ -22,7 +22,6 @@ const CommentList = ({ postId, currentUser }) => {
     loadComments();
   }, [postId]);
 
-  // Load all comments for this post
   const loadComments = async () => {
     try {
       const data = await fetchComments(postId);
@@ -36,7 +35,6 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
-  // Add new comment handler
   const handleAddComment = async (e) => {
     e.preventDefault();
     const trimmed = newCommentText.trim();
@@ -69,17 +67,20 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
-  // Save edited comment handler
   const handleSaveEdit = async (commentId) => {
-    if (!editText.trim()) return setError("Comment text cannot be empty.");
+    const trimmed = editText.trim();
+
+    if (!trimmed) return setError("Comment text cannot be empty.");
+    if (trimmed.length < 2)
+      return setError("Comment must be at least 2 characters.");
+    if (trimmed.length > 280)
+      return setError("Comment must be 280 characters or less.");
 
     try {
-      await updateComment(commentId, { comment_text: editText.trim() });
+      await updateComment(commentId, { comment_text: trimmed });
       setComments((prev) =>
         prev.map((c) =>
-          c.comment_id === commentId
-            ? { ...c, comment_text: editText.trim() }
-            : c
+          c.comment_id === commentId ? { ...c, comment_text: trimmed } : c
         )
       );
       setEditingCommentId(null);
@@ -91,7 +92,6 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
-  // Delete comment handler (soft-delete)
   const handleDeleteComment = async (commentId) => {
     try {
       await deleteComment(commentId);
@@ -104,7 +104,6 @@ const CommentList = ({ postId, currentUser }) => {
     }
   };
 
-  // Open edit textarea with comment content
   const handleEditComment = (comment) => {
     setEditingCommentId(comment.comment_id);
     setEditText(comment.comment_text);
@@ -112,7 +111,6 @@ const CommentList = ({ postId, currentUser }) => {
     setError("");
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -179,34 +177,31 @@ const CommentList = ({ postId, currentUser }) => {
                     )
                   }
                   className="p-1 hover:bg-gray-200 rounded"
-                  data-tooltip-id={`options-comment-${comment.comment_id}`}
-                  data-tooltip-content="More"
+                  data-tooltip-id="shared-tooltip"
+                  data-tooltip-content="More options"
                 >
                   <MoreVertical size={18} />
                 </button>
-                <Tooltip id={`options-comment-${comment.comment_id}`} />
 
                 {dropdownOpenId === comment.comment_id && (
                   <div className="absolute right-0 mt-2 w-28 bg-white border shadow-md rounded z-10">
                     <button
                       onClick={() => handleEditComment(comment)}
                       className="flex items-center w-full px-3 py-2 text-sm hover:bg-gray-100"
-                      data-tooltip-id={`edit-comment-${comment.comment_id}`}
+                      data-tooltip-id="shared-tooltip"
                       data-tooltip-content="Edit Comment"
                     >
                       <Pencil size={16} className="mr-2" /> Edit
                     </button>
-                    <Tooltip id={`edit-comment-${comment.comment_id}`} />
 
                     <button
                       onClick={() => handleDeleteComment(comment.comment_id)}
                       className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
-                      data-tooltip-id={`delete-comment-${comment.comment_id}`}
+                      data-tooltip-id="shared-tooltip"
                       data-tooltip-content="Delete Comment"
                     >
                       <Trash2 size={16} className="mr-2" /> Delete
                     </button>
-                    <Tooltip id={`delete-comment-${comment.comment_id}`} />
                   </div>
                 )}
               </div>
@@ -222,7 +217,6 @@ const CommentList = ({ postId, currentUser }) => {
           placeholder="Add a comment..."
           rows={2}
           className="w-full p-2 border rounded"
-          required
         />
         <button
           type="submit"
@@ -231,6 +225,7 @@ const CommentList = ({ postId, currentUser }) => {
           Comment
         </button>
       </form>
+      <Tooltip id="shared-tooltip" />
     </div>
   );
 };

@@ -24,7 +24,7 @@ const PostEditor = ({
       return;
     }
     setError("");
-    onSubmit(trimmed);
+    onSubmit(trimmed, setError);
     setContent("");
   };
 

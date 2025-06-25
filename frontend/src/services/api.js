@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:5000/api/v1";
+const API_BASE = "http://52.204.186.98:5000/api/v1";
 
-export const fetchPosts = async () => {
-  const res = await axios.get(`${API_BASE}/posts`);
+export const fetchPosts = async (userId) => {
+  const res = await axios.get(`${API_BASE}/posts`, { userId });
   return res.data;
 };
 
 export const createPost = async (postData) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/v1/posts",
+      "http://52.204.186.98:5000/api/v1/posts",
       postData,
       {
         headers: {
@@ -72,7 +72,6 @@ export const likePost = async ({ users_id, posts_id }) => {
 export const unlikePost = async ({ users_id, posts_id }) => {
   const res = await axios.delete(`${API_BASE}/likes`, {
     data: { users_id, posts_id },
-    headers: { "Content-Type": "application/json" },
   });
   return res.data;
 };
