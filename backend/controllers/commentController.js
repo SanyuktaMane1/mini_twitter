@@ -2,7 +2,6 @@ const { Comment, User } = require("../models");
 
 exports.createComment = async (req, res) => {
   try {
-    console.log("Incoming comment:", req.body);
     const { posts_id, users_id, comment_text } = req.body;
 
     if (!posts_id || !users_id || !comment_text || comment_text.trim() === "") {

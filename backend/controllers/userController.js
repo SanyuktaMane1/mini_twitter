@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 
 exports.registerUser = async (req, res) => {
   try {
+    console.log("REQUEST BODY:", req.body);
+
     const { usersname, password } = req.body;
 
     const existingUser = await User.findOne({ where: { usersname } });

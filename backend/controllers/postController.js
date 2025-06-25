@@ -12,8 +12,12 @@ exports.createPost = async (req, res) => {
   }
 };
 
+
+
 exports.getAllPosts = async (req, res) => {
   try {
+    console.log("here");
+
     const posts = await Post.findAll({
       where: { disabled: 0 },
       include: [
@@ -24,25 +28,33 @@ exports.getAllPosts = async (req, res) => {
         },
         {
           model: Like,
-          as: "Likes", 
+          as: "Likes",
+          required: false,
           attributes: [],
+          where: {
+            disabled: 0,
+          },
         },
       ],
       attributes: {
         include: [
-          [Sequelize.fn("COUNT", Sequelize.col("Likes.like_id")), "likeCount"],
+          [Sequelize.fn("COUNT", Sequelize.col("Likes.posts_id")), "likeCount"],
         ],
       },
       group: ["Post.posts_id", "User.users_id"],
       order: [["created_at", "DESC"]],
     });
 
-    const formattedPosts = posts.map((post) => ({
-      ...post.toJSON(),
-      usersname: post.User?.usersname,
-      likes: Number(post.get("likeCount")) || 0,
-    }));
+    const postt = await Post.findAll({ where: { disabled: 0 } });
 
+    const formattedPosts = posts.map((post) => {
+      return {
+        ...post.toJSON(),
+        usersname: post.User?.usersname,
+        likes: Number(post.get("likeCount")) || 0,
+      };
+    });
+    console.log(posts);
     res.json(formattedPosts);
   } catch (error) {
     console.error("Error fetching posts with likes:", error);
@@ -53,6 +65,7 @@ exports.getAllPosts = async (req, res) => {
 exports.getPostById = async (req, res) => {
   try {
     const post = await Post.findByPk(req.params.id);
+    console.log("Here");
     if (!post) return res.status(404).json({ error: "Post not found." });
     res.json(post);
   } catch (err) {

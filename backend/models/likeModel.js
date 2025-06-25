@@ -17,6 +17,10 @@ const Like = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    disabled: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     tableName: "likes",
