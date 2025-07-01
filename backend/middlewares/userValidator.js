@@ -1,12 +1,31 @@
 const { body, validationResult } = require("express-validator");
 const sanitizeHtml = require("sanitize-html");
 
+// const cleanInput = (value) => {
+//   const cleaned = sanitizeHtml(value, {
+//     allowedTags: [],
+//     allowedAttributes: {},
+//   }).trim();
+//   if (cleaned.length === 0) {
+//     throw new Error("Invalid input after sanitization.");
+//   }
+
+//   return cleaned;
+// };
+
 const cleanInput = (value) => {
+  if (typeof value !== 'string') {
+    console.warn("🟡 Non-string input received:", value);
+    throw new Error("Input must be a string.");
+  }
+
   const cleaned = sanitizeHtml(value, {
     allowedTags: [],
     allowedAttributes: {},
   }).trim();
-  if (cleaned.length === 0) {
+
+  if (!cleaned || cleaned.length === 0) {
+    console.warn("🟡 Cleaned input is empty:", value);
     throw new Error("Invalid input after sanitization.");
   }
 
