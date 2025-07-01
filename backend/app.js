@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const sequelize = require("./config/db");
-require("./models"); // This must be BEFORE sequelize.sync()
+require("./models");
 
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
@@ -12,7 +12,18 @@ const likeRoutes = require("./routes/likeRoutes");
 
 const app = express();
 
-app.use(cors({ origin: "http://52.204.186.98" }));
+// app.use(cors({ origin: "http://52.204.186.98" }));
+app.use(
+  cors({
+    origin: [
+      "http://52.204.186.98", // for local tests
+      "http://your-bucket.s3-website.ap-south-1.amazonaws.com", // your frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(
   express.json({
     strict: true,
@@ -31,7 +42,7 @@ app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/comments", commentRoutes);
 app.use("/api/v1/likes", likeRoutes);
 
-// 🛠️ Sync database before starting server
+
 console.log("🔧 Attempting to sync DB...");
 
 sequelize
