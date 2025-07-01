@@ -14,8 +14,7 @@ const sanitizeHtml = require("sanitize-html");
 // };
 
 const cleanInput = (value) => {
-  if (typeof value !== 'string') {
-    console.warn("🟡 Non-string input received:", value);
+  if (typeof value !== "string") {
     throw new Error("Input must be a string.");
   }
 
@@ -24,13 +23,9 @@ const cleanInput = (value) => {
     allowedAttributes: {},
   }).trim();
 
-  if (!cleaned || cleaned.length === 0) {
-    console.warn("🟡 Cleaned input is empty:", value);
-    throw new Error("Invalid input after sanitization.");
-  }
-
   return cleaned;
 };
+
 
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
