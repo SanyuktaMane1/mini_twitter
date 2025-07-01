@@ -6,7 +6,10 @@ const cleanInput = (value) => {
     allowedTags: [],
     allowedAttributes: {},
   }).trim();
-  if (!cleaned) throw new Error("Invalid input.");
+  if (cleaned.length === 0) {
+    throw new Error("Invalid input after sanitization.");
+  }
+
   return cleaned;
 };
 

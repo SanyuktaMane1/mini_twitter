@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: [
       "http://52.204.186.98", // for local tests
-      "http://your-bucket.s3-website.ap-south-1.amazonaws.com", // your frontend
+      "http://frontendtwitterclonebucket.s3-website-your-region.amazonaws.com", // your frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
