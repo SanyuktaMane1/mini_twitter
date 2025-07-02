@@ -3,11 +3,14 @@ const sanitizeHtml = require("sanitize-html");
 const { Post } = require("../models");
 
 const cleanInput = (value) => {
-  return sanitizeHtml(value, {
+  const cleaned = sanitizeHtml(value, {
     allowedTags: [],
     allowedAttributes: {},
   }).trim();
+
+  return cleaned; 
 };
+
 
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
