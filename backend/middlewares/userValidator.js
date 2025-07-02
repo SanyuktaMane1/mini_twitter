@@ -12,18 +12,13 @@ const sanitizeHtml = require("sanitize-html");
 
 //   return cleaned;
 // };
-
 const cleanInput = (value) => {
-  if (typeof value !== "string") {
-    throw new Error("Input must be a string.");
-  }
-
   const cleaned = sanitizeHtml(value, {
     allowedTags: [],
     allowedAttributes: {},
   }).trim();
 
-  return cleaned;
+  return cleaned; 
 };
 
 
