@@ -46,7 +46,7 @@ app.use("/api/v1/likes", likeRoutes);
 console.log("🔧 Attempting to sync DB...");
 
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     console.log("✅ DB Synced");
     const PORT = process.env.PORT || 5000;
