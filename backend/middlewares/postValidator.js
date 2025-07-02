@@ -2,15 +2,10 @@ const { body, validationResult } = require("express-validator");
 const sanitizeHtml = require("sanitize-html");
 
 const cleanInput = (value) => {
-  const cleaned = sanitizeHtml(value, {
+  return sanitizeHtml(value, {
     allowedTags: [],
     allowedAttributes: {},
   }).trim();
-  if (cleaned.length === 0) {
-    throw new Error("Invalid input after sanitization.");
-  }
-
-  return cleaned;
 };
 
 const handleValidationErrors = (req, res, next) => {
