@@ -1,8 +1,6 @@
 import axios from "axios";
 
-// const API_BASE = "/api/v1";
-const API_BASE = "http://52.204.186.98:5000/api/v1"; 
-
+const API_BASE = "http://52.204.186.98:5000/api/v1";
 
 export const fetchPosts = async (userId) => {
   const res = await axios.get(`${API_BASE}/posts`, { userId });
@@ -38,7 +36,6 @@ export const deletePost = async (postId) => {
   return response.data;
 };
 
-// Comments API
 export const fetchComments = async (postId) => {
   const res = await axios.get(`${API_BASE}/comments/posts/${postId}`);
   return res.data;

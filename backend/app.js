@@ -12,12 +12,11 @@ const likeRoutes = require("./routes/likeRoutes");
 
 const app = express();
 
-// app.use(cors({ origin: "http://52.204.186.98" }));
 app.use(
   cors({
     origin: [
-      "http://52.204.186.98", // for local tests
-      "http://frontendtwitterclonebucket.s3-website-us-east-1.amazonaws.com", // your frontend
+      "http://52.204.186.98",
+      "http://frontendtwitterclonebucket.s3-website-us-east-1.amazonaws.com", 
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
